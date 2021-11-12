@@ -13,9 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+<img src="./img/foto2019.jpg" width="180" height="200" />
+
 ## Datos personales
 
-![](./img/foto2019.jpg)
 Fecha de nacimiento: 08/08/1991  
 Edad: 30  
 Nacionalidad: Uruguayo e Italiano  
