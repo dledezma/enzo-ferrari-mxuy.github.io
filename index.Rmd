@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Datos personales
 
+![](./img/foto2019.jpg)
 Fecha de nacimiento: 08/08/1991  
 Edad: 30  
 Nacionalidad: Uruguayo e Italiano  
@@ -22,14 +23,15 @@ Nacionalidad: Uruguayo e Italiano
 
 ## Formación Académica
 
-Licenciatura en Ciencias Biológicas, Orientación Botánica, Facultad de Ciencias, Universidad de la República, Uruguay (UdelaR)  
+Licenciatura en Ciencias Biológicas, Orientación Botánica,   
+Facultad de Ciencias, Universidad de la República, Uruguay (UdelaR)  
 2010-2017
 
 ## Contacto y redes sociales
 
 enzo.ferrari@iecologia.unam.mx  
-Facebook: enzoferrari18  
-Instagram: sapiem_manik
+![](./img/facebook_icon.png) Facebook: [enzoferrari18](https://www.facebook.com/enzoferrari18)  
+![](./img/Twitter_icon.png)Instagram: [sapiem_manik](https://www.instagram.com/sapiem_manik)
 
 ## R Markdown
 
