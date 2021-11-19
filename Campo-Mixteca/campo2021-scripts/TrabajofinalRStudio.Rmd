@@ -1,0 +1,120 @@
+---
+title: "Maiz_Campo_Mixteca_Unix_R"
+date: "17/11/2021"
+output: html_document
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### *Universidad Nacional Autónoma de México*
+### **Instituto de Ecología**
+### **Doctorado en Ciencias Biomédicas**
+### Alumno: *Enzo Agustin Ferrari Fructos*
+### Título Proyecto de Investigación: *"Bases transcriptómicas y fisiológicas de la plasticidad fenotípica de maíces tolerantes a estrés hídrico: maíces de cajete en la Mixteca Alta de Oaxaca"*
+## Trabajo de campo - Ciclo agrícola 2021
+### Localización: Municipio Santo Domingo Tonaltepec, Oaxaca, México
+#### Variables climáticas, morfológicas y fenológicas
+
+##### Introducción
+
+*Se llevaron a cabo 14 jornadas de trabajo de campo desde el 29 de abril al 10 de octubre del 2021 para la toma de mediciones fenológicas, morfológicas (04/07, 22/07, 27/07, 03/08, 04/08, 11/08, 12/08, 09/10 y 10/10) y fisiológicas (22/07, 25/07, 27/07, 03/08, 05/08, 06/08, 12/08, 10/10). Asimismo, se registró en simultáneo las variables climáticas en intervalos de 1h de parámetros climáticos atmosféricos y del suelo (temperatura atmosférica y del suelo, precipitación, dirección/velocidad del viento, humedad atmosférica y del suelo). Se realizó seguimiento fenológico a 5 parcelas de cajete (C1-C5) en lamabordo y 4 parcelas de temporal (T1-T4) en tapa-pié (día de siembra, día a emergencia, día a diferenciación del ápice, días a floración femenina/masculina, días a madurez del grano). A su vez, las parcelas C1 (Ichiyodo) y T1 (La Loma) se subdividieron en 4 cuadrantes para dar seguimiento de las variables morfológicas (altura, cantidad de hojas/nudos, diámetro inf/med/sup) de 20 plantas por cuadrante (80 por parcela, 160 en total). Estas mismas 160 plantas se utilizaron para las mediciones fisiológicas, por triplicado de cada variable por planta: fluorescencia mínima (F0), fluorescencia máxima (FM) y fluorescencia variable (FV), rendimiento cuántico del PSII o 𝚫F/FM o Y(II), tasa de transporte de electrones (ETR), radiación fotosintéticamente activa (PAR), temperatura de la hoja (T), humedad relativa (RH), FMS o FM’ (fluoresc. máx. con iluminación actínica, edo. estacionario) y FMS o F (fluorescencia en condiciones de estadio estacionario “S” (previo al pulso de saturación). En las variables de siembra, para las parcelas C1 (Ichiyodo) y T1 (La Loma) se contabilizó cuántas plantas germinaron por mata.*
+
+##### Pregunta/Hipótesis/Objetivos
+
+***Pregunta***  
+¿Qué variable influye más sobre el crecimiento y estrés fisiológico de los maíces de cajete y temporal, el agroecosistema o el acervo genético? 
+
+***Hipótesis***  
+El agroecosistema influye más sobre el crecimiento y el estrés fisiológico de las plantas.
+
+***Objetivos***  
+Indagar sobre la incidencia de diferentes variables (climáticas, morfológicas y fisiológicas) de un experimento a campo en la Mixteca Alta de Oaxaca
+
+##### Método/Diseño/Análisis
+
+*En este reporte se indicarán únicamente los pasos realizados en RStudio. Los comandos de Unix se indicarán como anexos ***(A1-An)***, al archivo:*  
+**/Campo-Mixteca/campo2021-scripts/TrabajofinalScriptsUnix.md**  
+*con su correspondiente visualización de outputs*
+
+##### Método
+
+##### A1. Creación de estructura de directorios y archivos
+
+***(Ver A1 en TrabajofinalScriptsUnix.md)***
+
+Creamos *Campo-Mixteca.Rproj*, *TrabajoFinal.RData* y *TrabajoFinal.Rhistory*, y cargamos las librerías:
+
+
+```{r}
+library(rmarkdown)
+library(dplyr)
+library(ggplot2)
+library(BiocManager)
+library(colorspace)
+library(RColorBrewer)
+setwd("C:/Users/elfer/Documents/Campo-Mixteca/")
+list.files()
+```
+Primero trabajaremos con los datos climáticos. El set de datos de la estación meteorológica contaba con tres tablas en archivos .txt, con registros tomados de diferentes fechas, pero con filas repetidas entre archivos. Otro inconveniente era el formato de fechas dd/mm/aa (que dificulta el orden alfanumérico de los datos), así como la existencia de registros de prueba de diciembre de 2020,  Asimismo, las etiquetas tenían nombres inoportunos y divididos en dos filas. Ej: de uno de los archivos:
+
+```{r}
+read.delim("C:/Users/elfer/Documents/respaldos_tablas_Campo-Mixteca/Mayo-Julio_2021_Lama.txt",header = TRUE) %>% head()
+```
+
+
+Por esta razón, previo a crear los objetos en RStudio y ser subidos a la carpeta **"C:/Users/elfer/Documents/Campo-Mixteca/campo2021-data/clima"**  modifiqué los archivos .txt de clima en (Excel), modifiqué las etiquetas para mejorar la notación, eliminé la segunda fila, para que sólo la primera fila contenga las etiquetas. Y modifiqué el formato de fecha a aa/mm/dd. Ej con el archivo anterior modificado:
+
+```{r}
+read.delim("C:/Users/elfer/Documents/respaldos_tablas_Campo-Mixteca/2020_12_2021_07_Lama.txt", header = TRUE) %>% head()
+```
+
+Con los archivos modificados según lo descrito (./2020_12_2021_07_Lama.txt ./2021_05_2021_06_Lama.txt  ./2021_07_2021_10_Lama.txt), se aplicarán comandos de Unix para crear un archivo unificado de la estación meteorológica en el ciclo agrícola 2021.
+
+##### A2. Creación de tabla de datos climáticos crudos ordenados
+
+La tabla fue subida a la carpeta **"C:/Users/elfer/Documents/Campo-Mixteca/campo2021-data/clima"**
+
+```{r}
+setwd("C:/Users/elfer/Documents/Campo-Mixteca/campo2021-data/clima/")
+list.files()
+Clima_Ichiyodo_2021 <- read.delim("C:/Users/elfer/Documents/Campo-Mixteca/campo2021-data/clima/clima-ordenado.txt",header=TRUE)
+glimpse(Clima_Ichiyodo_2021)
+```
+
+Son demasiados datos climáticos. Selecciono sólo las columnas de mi interés, modifico el tipo de valor a numérico en medidas de Humedad y Temperatura de suelo, filtro para quitar los registros de humedad con valor NA o mayor que 100 (primeras mediciones fueron de prueba), y creo un nuevo objeto, reducido de mis datos climáticos.
+
+
+
+```{r}
+Clima_Ichiyodo_2021_reducido <- Clima_Ichiyodo_2021 %>% select(Date,Time,Temp_Out,Hi_Temp,Low_Temp,Out_Hum,Dew_Pt,Wind_Speed,Hi_Speed,Bar,Rain,Soil1_Moist,Soil2_Moist,Soil3_Moist,Soil4_Moist,Soil_Temp1,Soil_Temp2,Soil_Temp3,Soil_Temp4)
+Clima_Ichiyodo_2021_reducido$Soil1_Moist <- as.double(Clima_Ichiyodo_2021$Soil1_Moist)
+Clima_Ichiyodo_2021_reducido$Soil2_Moist <- as.double(Clima_Ichiyodo_2021$Soil2_Moist)
+Clima_Ichiyodo_2021_reducido$Soil3_Moist <- as.double(Clima_Ichiyodo_2021$Soil3_Moist)
+Clima_Ichiyodo_2021_reducido$Soil4_Moist <- as.double(Clima_Ichiyodo_2021$Soil4_Moist)
+Clima_Ichiyodo_2021_reducido$Soil_Temp1 <- as.double(Clima_Ichiyodo_2021$Soil_Temp1)
+Clima_Ichiyodo_2021_reducido$Soil_Temp2 <- as.double(Clima_Ichiyodo_2021$Soil_Temp2)
+Clima_Ichiyodo_2021_reducido$Soil_Temp3 <- as.double(Clima_Ichiyodo_2021$Soil_Temp3)
+Clima_Ichiyodo_2021_reducido$Soil_Temp4 <- as.double(Clima_Ichiyodo_2021$Soil_Temp4)
+Clima_Ichiyodo_2021_reducido <- Clima_Ichiyodo_2021_reducido %>% filter(Soil1_Moist<=100,Soil2_Moist<=100,Soil3_Moist<=100,Soil4_Moist<=100)
+glimpse(Clima_Ichiyodo_2021_reducido)
+```
+
+##### Resultados
+
+En el directorio ***"C:/Users/elfer/Documents/Campo-Mixteca/campo2021-analysis/"*** se ubicarán los plots.
+
+```{r}
+setwd("C:/Users/elfer/Documents/Campo-Mixteca/campo2021-analysis/")
+Rain_Date <- ggplot(Clima_Ichiyodo_2021_reducido, aes(Rain,Date)) + geom_col(fill="Blue")
+Rain_Date
+Rain_Time <- ggplot(Clima_Ichiyodo_2021_reducido, aes(Rain,Time)) + geom_col(fill="Blue")
+Rain_Time
+Rain_Temp_Out <- ggplot(Clima_Ichiyodo_2021_reducido, aes(Temp_Out,Rain)) + geom_point(color="Blue")
+Rain_Temp_Out
+```
+
+##### Conclusión 
+
+Estos son resultados preliminares de la minería de datos de clima, morfología y fisiología, que serán presentados como resultados parciales para el examen tutoral semestral a realizarse el día 3 de diciembre de 2021.
